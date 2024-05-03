@@ -1,13 +1,16 @@
 from tkinter.ttk import Button, Label, Entry, Frame
 from tkinter import Tk, font
 
-from machine import Pin
+from RPi.GPIO import GPIO
 from time import sleep
 
 class LedControl(Frame):
   def __init__(self, master=None, pin=17):
     Frame.__init__(self, master)
-    self.led = Pin(pin, Pin.OUT)
+    
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(pin, GPIO.OUT)
+
     self.pack()
     self.ledState = False
     self.amountOfTimes = 0
@@ -77,7 +80,7 @@ class LedControl(Frame):
         self.turnOnLed()
 
   def turnOnLed(self):
-    self.led.value(1)
+    GPIO.output(17, 1)
     self.ledState = True
     self.ledLabel.config(text="LED State: ON")
     print(f"LED State: {self.ledState}")
@@ -85,7 +88,7 @@ class LedControl(Frame):
     sleep(self.timeToSleep)
 
   def turnOffLed(self):
-    self.led.value(0)
+    GPIO.output(17, 0)
     self.ledState = False
     self.ledLabel.config(text="LED State: OFF")
     print(f"LED State: {self.ledState}")
